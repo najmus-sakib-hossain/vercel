@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "build-three": {
+      "outputMode": "new-only"
+    }
+  }
+}

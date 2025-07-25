@@ -1,0 +1,4 @@
+bar
+bar
+ion: undefined variable: foo
+ion: pipeline execution error: command not found: super::demo

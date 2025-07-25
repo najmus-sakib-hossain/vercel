@@ -1,0 +1,11 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      // old
+      "dotEnv": [".env"],
+      "inputs": ["src/**/*.ts"]
+    }
+  }
+}

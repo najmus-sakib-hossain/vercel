@@ -1,0 +1,52 @@
+for i in 1..6
+    echo $i
+end
+
+for i in 1...5
+    echo $i
+end
+
+for i in 1 2 3 4 5
+    echo $i
+end
+
+for i in @(echo 1 2 3 4 5)
+    echo $i
+end
+
+for i in [1 2 3 4 5]
+    echo $i
+end
+
+for i in 1{A{1,2},B{1,2}}
+    echo $i
+end
+
+for x y z in 1..=10
+    echo $x, $y, $z
+end
+
+let array = [ 1 2 3 4 5 ]
+for i in @array
+    echo $i
+end
+
+let multi_line_input = "one
+two
+three"
+
+for word in $multi_line_input
+    echo "; $word"
+end
+
+mkdir for_test
+cd for_test
+touch "a b c"
+touch "d e f"
+touch "g"
+touch "h i"
+for file in *
+    echo $file
+end
+cd ..
+rm for_test -R

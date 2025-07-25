@@ -1,0 +1,13 @@
+fn fib n
+    let output previous = 0 1
+    for _ in 0..$n
+       let temp = $output
+       let output += $previous
+       let previous = $temp
+    end
+    echo $n $output
+end
+
+for i in 0..184
+    fib $i
+end

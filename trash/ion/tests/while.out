@@ -1,0 +1,36 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1
+2
+3
+4
+found 5
+6
+7
+8
+9
+outer loop #1
+    inner loop #1
+    inner loop #2
+    inner loop #3
+outer loop #2
+    inner loop #1
+    inner loop #2
+    inner loop #3
+outer loop #3
+    inner loop #1
+    inner loop #2
+    inner loop #3
+1 1
+1 2
+2 3
+3 5
+5 8
+8 13

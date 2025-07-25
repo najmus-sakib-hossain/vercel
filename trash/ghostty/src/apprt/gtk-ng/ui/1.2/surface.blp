@@ -1,0 +1,13 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GhosttySurface: Adw.Bin {
+  Overlay {
+    GLArea gl_area {
+      hexpand: true;
+      vexpand: true;
+      focusable: true;
+      focus-on-click: true;
+    }
+  }
+}

@@ -1,0 +1,205 @@
+use std::{any::Any, str::FromStr};
+
+use serde::Deserialize;
+
+use crate::Lockfile;
+
+mod de;
+mod ser;
+
+type Map<K, V> = std::collections::BTreeMap<K, V>;
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Unable to parse: {0}")]
+    SymlParse(String),
+    #[error("Unable to convert to structured syml: {0}")]
+    SymlStructure(#[from] serde_json::Error),
+    #[error("Unexpected non-utf8 yarn.lock")]
+    NonUTF8(#[from] std::str::Utf8Error),
+}
+
+#[derive(Debug)]
+pub struct Yarn1Lockfile {
+    inner: Map<String, Entry>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct Entry {
+    name: Option<String>,
+    version: String,
+    uid: Option<String>,
+    resolved: Option<String>,
+    integrity: Option<String>,
+    registry: Option<String>,
+    dependencies: Option<Map<String, String>>,
+    optional_dependencies: Option<Map<String, String>>,
+}
+
+impl Yarn1Lockfile {
+    pub fn from_bytes(input: &[u8]) -> Result<Self, super::Error> {
+        let input = std::str::from_utf8(input).map_err(Error::from)?;
+        Self::from_str(input)
+    }
+}
+
+impl FromStr for Yarn1Lockfile {
+    type Err = super::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let value = de::parse_syml(s)?;
+        let inner = serde_json::from_value(value)?;
+        Ok(Self { inner })
+    }
+}
+
+impl Lockfile for Yarn1Lockfile {
+    #[tracing::instrument(skip(self, _workspace_path))]
+    fn resolve_package(
+        &self,
+        _workspace_path: &str,
+        name: &str,
+        version: &str,
+    ) -> Result<Option<crate::Package>, crate::Error> {
+        for key in possible_keys(name, version) {
+            if let Some(entry) = self.inner.get(&key) {
+                return Ok(Some(crate::Package {
+                    key,
+                    version: entry.version.clone(),
+                }));
+            }
+        }
+
+        Ok(None)
+    }
+
+    #[tracing::instrument(skip(self))]
+    fn all_dependencies(
+        &self,
+        key: &str,
+    ) -> Result<Option<std::collections::HashMap<String, String>>, crate::Error> {
+        let Some(entry) = self.inner.get(key) else {
+            return Ok(None);
+        };
+
+        let all_deps: std::collections::HashMap<_, _> = entry.dependency_entries().collect();
+        Ok(match all_deps.is_empty() {
+            false => Some(all_deps),
+            true => None,
+        })
+    }
+
+    fn subgraph(
+        &self,
+        _workspace_packages: &[String],
+        packages: &[String],
+    ) -> Result<Box<dyn Lockfile>, super::Error> {
+        let mut inner = Map::new();
+
+        for (key, entry) in packages.iter().filter_map(|key| {
+            let entry = self.inner.get(key)?;
+            Some((key, entry))
+        }) {
+            inner.insert(key.clone(), entry.clone());
+        }
+
+        Ok(Box::new(Self { inner }))
+    }
+
+    fn encode(&self) -> Result<Vec<u8>, crate::Error> {
+        Ok(self.to_string().into_bytes())
+    }
+
+    fn global_change(&self, other: &dyn Lockfile) -> bool {
+        let any_other = other as &dyn Any;
+        // Downcast returns none if the concrete type doesn't match
+        // if the types don't match then we changed package managers
+        any_other.downcast_ref::<Self>().is_none()
+    }
+
+    fn turbo_version(&self) -> Option<String> {
+        // Yarn lockfiles can have multiple descriptors as a key e.g. turbo@latest,
+        // turbo@1.2.3 We just check if the first descriptor is for turbo and
+        // return that. Using multiple versions of turbo in a single project is
+        // not supported.
+        let key = self.inner.keys().find(|key| key.starts_with("turbo@"))?;
+        let entry = self.inner.get(key)?;
+        Some(entry.version.clone())
+    }
+
+    fn human_name(&self, package: &crate::Package) -> Option<String> {
+        let entry = self.inner.get(&package.key)?;
+        let name = entry.name.as_deref()?;
+        let version = &entry.version;
+        Some(format!("{name}@{version}"))
+    }
+}
+
+pub fn yarn_subgraph(contents: &[u8], packages: &[String]) -> Result<Vec<u8>, crate::Error> {
+    let lockfile = Yarn1Lockfile::from_bytes(contents)?;
+    let pruned_lockfile = lockfile.subgraph(&[], packages)?;
+    pruned_lockfile.encode()
+}
+
+impl Entry {
+    fn dependency_entries(&self) -> impl Iterator<Item = (String, String)> + '_ {
+        self.dependencies
+            .iter()
+            .flatten()
+            .chain(self.optional_dependencies.iter().flatten())
+            .map(|(k, v)| (k.clone(), v.clone()))
+    }
+}
+
+const PROTOCOLS: &[&str] = ["", "npm:", "file:", "workspace:", "yarn:"].as_slice();
+
+fn possible_keys<'a>(name: &'a str, version: &'a str) -> impl Iterator<Item = String> + 'a {
+    PROTOCOLS
+        .iter()
+        .copied()
+        .map(move |protocol| format!("{name}@{protocol}{version}"))
+}
+
+#[cfg(test)]
+mod test {
+    use pretty_assertions::assert_eq;
+    use test_case::test_case;
+
+    use super::*;
+
+    const MINIMAL: &str = include_str!("../../fixtures/yarn1.lock");
+    const FULL: &str = include_str!("../../fixtures/yarn1full.lock");
+    const GH_8849: &str = include_str!("../../fixtures/gh_8849.lock");
+
+    #[test_case(MINIMAL ; "minimal lockfile")]
+    #[test_case(FULL ; "full lockfile")]
+    #[test_case(GH_8849 ; "gh 8849")]
+    fn test_roundtrip(input: &str) {
+        let lockfile = Yarn1Lockfile::from_str(input).unwrap();
+        assert_eq!(input, lockfile.to_string());
+    }
+
+    #[test]
+    fn test_key_splitting() {
+        let lockfile = Yarn1Lockfile::from_str(FULL).unwrap();
+        for key in [
+            "@babel/types@^7.18.10",
+            "@babel/types@^7.18.6",
+            "@babel/types@^7.19.0",
+        ] {
+            assert!(
+                lockfile.inner.contains_key(key),
+                "missing {} in lockfile",
+                key
+            );
+        }
+    }
+
+    #[test_case(MINIMAL, "1.9.3" ; "minimal lockfile")]
+    #[test_case(FULL, "1.4.6" ; "full lockfile")]
+    fn test_turbo_version(lockfile: &str, expected: &str) {
+        let lockfile = Yarn1Lockfile::from_str(lockfile).unwrap();
+        assert_eq!(lockfile.turbo_version().as_deref(), Some(expected));
+    }
+}

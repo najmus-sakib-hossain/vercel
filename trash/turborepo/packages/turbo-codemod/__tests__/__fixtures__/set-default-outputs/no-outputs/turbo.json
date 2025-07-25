@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "pipeline": {
+    "build-one": {
+      "dependsOn": ["build-two"]
+    },
+    "build-two": {
+      "cache": false
+    },
+    "build-three": {
+      "persistent": true
+    }
+  }
+}

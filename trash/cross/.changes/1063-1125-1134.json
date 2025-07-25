@@ -1,0 +1,18 @@
+[
+    {
+        "type": "changed",
+        "description": "changed musl targets to use static-pie linkage by default, consistent with Alpine.",
+        "breaking": true
+    },
+    {
+        "type": "fixed",
+        "description": "fixed C++ support for musl targets.",
+        "issues": [902],
+        "breaking": true
+    },
+    {
+        "type": "fixed",
+        "description": "use a linker script for musl libstdc++ to ensure the archive links to libc, libm, and libgcc as needed.",
+        "issues": [1124]
+    }
+]

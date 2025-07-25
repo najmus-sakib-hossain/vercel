@@ -1,0 +1,11 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": [],
+  "globalPassThroughEnv": [],
+  "pipeline": {
+    "build": {
+      "env": [],
+      "passThroughEnv": []
+    }
+  }
+}

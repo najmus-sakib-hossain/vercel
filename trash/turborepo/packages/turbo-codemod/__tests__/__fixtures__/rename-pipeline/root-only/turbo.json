@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["important.txt"],
+  "pipeline": {
+    "build": {
+      "outputs": ["dist"]
+    }
+  }
+}

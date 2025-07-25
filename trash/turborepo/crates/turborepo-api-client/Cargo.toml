@@ -1,0 +1,38 @@
+[package]
+name = "turborepo-api-client"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+native-tls = ["reqwest/native-tls"]
+rustls-tls = ["reqwest/rustls-tls-native-roots"]
+
+[dev-dependencies]
+anyhow = { workspace = true }
+http = "1.1.0"
+httpmock = { workspace = true }
+insta = { workspace = true }
+port_scanner = { workspace = true }
+test-case = { workspace = true }
+turborepo-vercel-api-mock = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+bytes.workspace = true
+lazy_static = { workspace = true }
+regex = { workspace = true }
+reqwest = { workspace = true, features = ["json", "stream"] }
+rustc_version_runtime = "0.2.1"
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["full"] }
+tokio-stream = "0.1.15"
+tracing = { workspace = true }
+turborepo-ci = { workspace = true }
+turborepo-vercel-api = { workspace = true }
+url = { workspace = true }

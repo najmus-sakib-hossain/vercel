@@ -1,0 +1,37 @@
+on:
+  schedule:
+    - cron:  '0 0 * * 5'
+  workflow_dispatch:
+    inputs:
+      targets:
+        required: false
+        description: 'check these space or comma separated targets, supports wildcard *'
+
+name: Check
+
+env:
+  CARGO_NET_RETRY: 3
+  CARGO_HTTP_CHECK_REVOKE: false
+
+jobs:
+  weekly:
+    uses: ./.github/workflows/ci.yml
+    with:
+      matrix-args: --weekly
+      checkout-ref: ${{ github.ref }}
+  wiki:
+    name: Ensure wiki is valid
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-rust
+      - run: git clone ${wikirepo}
+        shell: bash
+        env:
+          wikirepo: https://github.com/${{ github.repository }}.wiki.git
+      - run: cargo test toml_check -- --nocapture
+  cargo-deny:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: EmbarkStudios/cargo-deny-action@v1

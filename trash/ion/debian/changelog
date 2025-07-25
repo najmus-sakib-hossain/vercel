@@ -1,0 +1,42 @@
+ion-shell (1:1.0.0-alpha2.3) disco; urgency=medium
+
+  * New release
+
+ -- Michael Aaron Murphy <michael@system76.com>  Wed, 29 May 2019 17:26:48 -0600
+
+ion-shell (1:1.0.0-alpha2.2) cosmic; urgency=medium
+
+  * More prompt fixes, optimizations, and string concat support
+
+ -- Michael Aaron Murphy <michael@system76.com>  Wed, 27 Mar 2019 15:59:22 -0600
+
+ion-shell (1:1.0.0-alpha2.1) cosmic; urgency=medium
+
+  * Fix for prompt not displaying when using Ctrl + C in the prompt
+
+ -- Michael Aaron Murphy <michael@system76.com>  Tue, 19 Mar 2019 13:12:02 -0600
+
+ion-shell (1:1.0.0-alpha2~cosmic2) cosmic; urgency=medium
+
+  * Fix for broken export assignments
+
+ -- Michael Aaron Murphy <michael@system76.com>  Mon, 18 Mar 2019 10:33:34 -0600
+
+ion-shell (1:1.0.0-alpha2~cosmic1) cosmic; urgency=medium
+
+  * Upstream updates
+
+ -- Michael Aaron Murphy <michael@system76.com>  Sat, 16 Mar 2019 22:31:21 -0600
+
+ion-shell (1:1.0.0-alpha1~cosmic0) cosmic; urgency=medium
+
+  * Upstream updates
+
+ -- Michael Aaron Murphy <michael@system76.com>  Wed, 23 Jan 2019 22:54:59 -0700
+
+ion-shell (1.0.0-alpha1~cosmic0) cosmic; urgency=medium
+
+  * Add postinst script for setting the shell.
+
+ -- Michael Aaron Murphy <michael@system76.com>  Thu, 01 Nov 2018 16:44:15 -0600
+

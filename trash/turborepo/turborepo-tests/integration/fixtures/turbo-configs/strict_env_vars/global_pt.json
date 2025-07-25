@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"]
+    }
+  },
+  "globalPassThroughEnv": ["GLOBAL_VAR_PT"]
+}

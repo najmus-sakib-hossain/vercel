@@ -1,0 +1,51 @@
+let a = 5
+echo $a
+
+let a b = 10 $a
+echo $a
+echo $b
+
+let a b c = 1 2 3
+echo $a
+echo $b
+echo $c
+
+let a b c = "one two" "three four" "five six"
+echo $a
+echo $b
+echo $c
+
+let a = 1;
+let a += 4
+echo $a
+let a *= 5
+echo $a
+let a /= 4
+echo $a
+
+let a[] b c[] = [one two] three [four five]
+echo @a
+echo $b
+echo @c
+
+let a b c = 6 3 5
+echo $a $b $c
+let a b c -= 2 2 4
+echo $a $b $c
+
+let x y z = 1 2 3
+let x y z = $z $x $y
+echo $x $y $z
+
+let x y z = 1 2 3
+let z x y = $y $z $x
+echo $x $y $z
+
+let a = [
+    one # a comment
+    two # another comment
+    three
+    four five six
+
+]
+echo $join(a "\n")

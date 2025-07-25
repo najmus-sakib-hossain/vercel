@@ -1,0 +1,23 @@
+fn first_test a b c
+  echo $a
+  echo $b
+  echo $c
+end
+
+first_test hello world goodbye
+
+fn another_test
+    for i in 1..10
+        echo $i
+    end
+end
+
+another_test
+
+fn square n:int
+    math $n \* $n
+end
+
+for num in 1 2 3 4 5 a 1.5
+    square $num
+end

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": ["CI"],
+  "tasks": {
+    "build": {
+      "env": ["ENV_1"]
+    }
+  }
+}

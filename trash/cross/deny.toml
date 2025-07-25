@@ -1,0 +1,49 @@
+[graph]
+# only check for the targets we currently publish
+targets = [
+  { triple = "x86_64-apple-darwin" },
+  { triple = "x86_64-unknown-linux-gnu" },
+  { triple = "x86_64-unknown-linux-musl" },
+  { triple = "x86_64-pc-windows-msvc" },
+]
+
+[advisories]
+version = 2
+ignore = [
+    # FIXME: remove this if/when clap changes to is-terminal, atty is
+    # patched, or we migrated to an MSRV of 1.66.0.
+    "RUSTSEC-2021-0145",
+    "RUSTSEC-2024-0375"
+]
+
+[bans]
+multiple-versions = "deny"
+deny = []
+skip-tree = [
+    { name = "nix", version = "=0.26.4", depth = 2 },
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = []
+
+[licenses]
+version = 2
+# need this since to suppress errors in case we add crates with these allowed licenses
+unused-allowed-license = "allow"
+confidence-threshold = 0.93
+allow = [
+  "Apache-2.0",
+  "MIT",
+  "CC0-1.0",
+  "ISC",
+  "0BSD",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "Unlicense",
+  "Unicode-DFS-2016",
+]
+
+[licenses.private]
+ignore = true

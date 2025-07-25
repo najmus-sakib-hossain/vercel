@@ -1,0 +1,5 @@
+{
+    "type": "changed",
+    "description": "update wine to 9.0.0.0",
+    "issues": [1372]
+}

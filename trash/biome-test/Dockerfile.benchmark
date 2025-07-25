@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1@sha256:9857836c9ee4268391bb5b09f9f157f3c91bb15821bb77969642813b0d00518d
+FROM rust:1.88.0@sha256:5771a3cc2081935c59ac52b92d49c9e164d4fed92c9f6420aa8cc50364aead6e
+WORKDIR /usr/src/
+
+# https://github.com/nodesource/distributions
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+RUN cargo install hyperfine
+
+COPY Cargo.toml Cargo.lock ./
+COPY ./crates ./crates
+COPY ./xtask ./xtask
+
+WORKDIR /usr/src/benchmark
+
+COPY ./benchmark .
+
+RUN npm ci
+RUN node bench.js formatter
+RUN node bench.js linter

@@ -1,0 +1,23 @@
+[package]
+name = "dx"
+version = "0.1.0"
+edition = "2021"
+description = "dx - enhance your developement experience!"
+repository = "https://github.com/manfromexistence/dx"
+license = "MIT"
+readme = "./README.md"
+documentation = "https://docs.rs/dx"
+homepage = "https://github.com/manfromexistence/dx"
+authors = ["manfromexistence <robinjusticeleague@gmail.com>"]
+keywords = ["friday", "forge", "dx", "dx-css", "dx-auth"]
+rust-version = "1.66.0"
+
+# [dependencies]
+# crossterm = "0.29.0"
+# ratatui = "0.22.0"
+# rayon = "1.10.0"
+# similar = "2.7.0"
+# syntect = "5.2.0"
+
+# [build-dependencies]
+# cc = "1.0"

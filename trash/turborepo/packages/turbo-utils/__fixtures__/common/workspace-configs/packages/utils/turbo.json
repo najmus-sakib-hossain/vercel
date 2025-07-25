@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  // invalid config - missing extends
+  "tasks": {
+    "build": {
+      "env": ["IS_SERVER"]
+    }
+  }
+}

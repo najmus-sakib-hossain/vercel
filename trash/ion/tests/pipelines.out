@@ -1,0 +1,9 @@
+test
+one
+two
+foo
+found foo
+did not find bar
+test
+found test
+ion: expansion error: Could not expand subprocess: pipeline execution error: command not found: im_not_a_command

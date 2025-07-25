@@ -1,0 +1,12 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "build": {
+      // old
+      "dependsOn": ["build", "$ENV_2"],
+      // new
+      "env": ["ENV_1"]
+    }
+  }
+}

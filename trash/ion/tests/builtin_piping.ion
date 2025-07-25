@@ -1,0 +1,5 @@
+matches Foo '([A-Z])[[:word:]]+' && echo true
+matches foo '([A-Z])[[:word:]]+' || echo false
+echo foo | cat
+read foo <<< $(echo bar)
+echo $foo

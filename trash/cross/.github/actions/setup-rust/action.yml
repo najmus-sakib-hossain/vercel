@@ -1,0 +1,29 @@
+name: Setup Rust
+description: Setup Rust with specified toolchain, target and components.
+inputs:
+  toolchain:
+    description: 'Toolchain'
+    default: stable
+    required: true
+  target:
+    description: 'Target'
+    required: false
+  components:
+    description: 'Components'
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ inputs.toolchain }}
+        target: ${{ inputs.target }}
+        components: ${{ inputs.components }}
+
+    - name: Install rust matcher
+      run: echo "::add-matcher::.github/actions/setup-rust/rust.json"
+      shell: bash
+
+    - uses: Swatinem/rust-cache@v2.2.0

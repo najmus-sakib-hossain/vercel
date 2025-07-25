@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "build": {
+      "inputs": ["*.txt", "!excluded.txt"],
+      "outputs": ["banana.txt", "apple.json"]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@clack/root",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stub": "pnpm -r run build --stub",
+    "build": "pnpm --filter \"@clack/*\" run build",
+    "start": "pnpm run dev",
+    "dev": "pnpm --filter @example/changesets run start",
+    "format": "biome check --write",
+    "lint": "biome lint --write --unsafe",
+    "types": "biome lint --write --unsafe",
+    "deps": "pnpm exec knip --production",
+    "test": "pnpm --color -r run test",
+    "pretest": "pnpm run build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.26.2",
+    "@types/node": "^18.16.0",
+    "knip": "^5.50.4",
+    "typescript": "^5.8.3",
+    "unbuild": "^2.0.0",
+    "jsr": "^0.13.4"
+  },
+  "packageManager": "pnpm@9.14.2",
+  "volta": {
+    "node": "20.18.1"
+  }
+}

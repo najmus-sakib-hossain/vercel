@@ -1,0 +1,15 @@
+// build.rs
+use std::env;
+use std::path::Path;
+use syntect::dumps;
+
+fn main() {
+    // This loads the complete set thanks to the features in Cargo.toml
+    let ss = syntect::parsing::SyntaxSet::load_defaults_nonewlines();
+    let ts = syntect::highlighting::ThemeSet::load_defaults();
+    let out_dir = env::var("OUT_DIR").unwrap();
+
+    // Dump them to binary files in the output directory
+    dumps::dump_to_file(&ss, Path::new(&out_dir).join("syntaxes.bin")).unwrap();
+    dumps::dump_to_file(&ts, Path::new(&out_dir).join("themes.bin")).unwrap();
+}
